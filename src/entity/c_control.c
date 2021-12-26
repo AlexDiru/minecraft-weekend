@@ -20,7 +20,13 @@ static void tick(struct ControlComponent *c_control, struct Entity entity) {
     struct MovementComponent *c_movement = ecs_get(entity, C_MOVEMENT);
     struct BlockLookComponent *c_blocklook = ecs_get(entity, C_BLOCKLOOK);
     struct PhysicsComponent *c_physics = ecs_get(entity, C_PHYSICS);
-    
+
+    // Can't sprint in flying mode because key binding in flying shift = fly down
+    if (!c_movement->flags.flying) {
+        c_movement->flags.sprinting = state.window->keyboard.keys[GLFW_KEY_LEFT_SHIFT].down;
+    } else {
+        c_movement->flags.sprinting = false;
+    }
     c_movement->directions.forward = state.window->keyboard.keys[GLFW_KEY_W].down;
     c_movement->directions.backward = state.window->keyboard.keys[GLFW_KEY_S].down;
     c_movement->directions.left = state.window->keyboard.keys[GLFW_KEY_A].down;

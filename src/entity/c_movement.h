@@ -6,6 +6,7 @@
 
 struct MovementComponent {
     f32 speed;
+    f32 sprint_speed;
     f32 jump_height;
 
     struct {
@@ -19,6 +20,7 @@ struct MovementComponent {
 
     struct {
         bool flying: 1;
+        bool sprinting: 1;
     } flags;
 };
 

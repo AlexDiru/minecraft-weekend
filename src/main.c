@@ -31,7 +31,8 @@ void init() {
         }
     }));
     ecs_add(player, C_MOVEMENT, ((struct MovementComponent) {
-        .speed = 1.0f,
+        .speed = 1.4f,
+        .sprint_speed = 2.1f,
         .jump_height = 1.0f
     }));
     ecs_add(player, C_CAMERA, ((struct CameraComponent) {
