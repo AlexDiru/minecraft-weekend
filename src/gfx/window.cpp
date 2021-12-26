@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <algorithm>
 
 // global window
 struct Window window;
@@ -15,8 +16,8 @@ static void _cursor_callback(GLFWwindow *handle, double xp, double yp) {
     vec2s p = {{xp, yp}};
 
     window.mouse.delta = glms_vec2_sub(p, window.mouse.position);
-    window.mouse.delta.x = clamp(window.mouse.delta.x, -100.0f, 100.0f);
-    window.mouse.delta.y = clamp(window.mouse.delta.y, -100.0f, 100.0f);
+    window.mouse.delta.x = std::clamp(window.mouse.delta.x, -100.0f, 100.0f);
+    window.mouse.delta.y = std::clamp(window.mouse.delta.y, -100.0f, 100.0f);
 
     window.mouse.position = p;
 }

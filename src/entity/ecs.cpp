@@ -13,7 +13,7 @@
 
 void _ecs_register_internal(
     enum ECSComponent id, size_t component_size,
-    struct ECS *ecs, union ECSSystem system) {
+    struct ECS *ecs, ECSSystem system) {
     struct ComponentList list = {
         .component_size = component_size,
         .system = system
@@ -127,6 +127,33 @@ void ecs_delete(ECS *self, Entity entity) {
     self->ids[entity.index] = ENTITY_NONE;
 }
 
+void ALEX_ecs_add_internal(Entity entity, enum ECSComponent component_id, void *value) {
+    ComponentList *list = &entity.ecs->lists[component_id];
+    ECSSubscriber init = list->system.init;
+    void *component = ECSCL_GET(list, entity.index);
+
+    // mark the component as used
+    //assert(!(ECS_TAG(component) & ECS_TAG_USED));
+    //*ECS_PTAG(component) |= ECS_TAG_USED;
+
+
+    if (value != NULL) {
+        memcpy(component, value, list->component_size);
+    }
+
+    if (component == NULL) {
+        printf("ECS Add Internal: Component is NULL\n");
+        return;
+    }
+
+    // run the initializer if it is not null
+    if (init != NULL) {
+        init(component, entity);
+    }
+
+    printf("DONE!");
+}
+
 void _ecs_add_internal(Entity entity, enum ECSComponent component_id, void *value) {
     struct ComponentList *list = &entity.ecs->lists[component_id];
     ECSSubscriber init = list->system.init;
@@ -159,15 +186,6 @@ void ecs_remove(struct Entity entity, enum ECSComponent component_id) {
     if (destroy != NULL) {
         destroy(component, entity);
     }
-}
-
-bool ecs_has(Entity entity, enum ECSComponent component) {
-    return ECS_TAG(ECSCL_GET(&entity.ecs->lists[component], entity.index)) & ECS_TAG_USED;
-}
-
-void *ecs_get(Entity entity, enum ECSComponent component) {
-    assert(ecs_has(entity, component));
-    return ECSCL_GET(&entity.ecs->lists[component], entity.index);
 }
 
 void ecs_init(ECS *self, World *world) {

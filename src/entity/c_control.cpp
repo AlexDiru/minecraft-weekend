@@ -1,25 +1,26 @@
 #include "c_control.h"
 
+#include <algorithm>
 #include "../state.h"
 #include "../ui/ui.h"
 
-static void update(struct ControlComponent *c_control, struct Entity entity) {
-    struct CameraComponent* c_camera = (CameraComponent*)ecs_get(entity, C_CAMERA);
+static void update(struct ControlComponent *c_control, Entity* entity) {
+    struct CameraComponent* c_camera = entity->componentManager->getCameraComponent(entity);
 
     c_camera->camera.pitch -= state.window->mouse.delta.y /
                               (((f32)state.window->frame_delta) /
                                (c_control->mouse_sensitivity * 15000.0f));
-    c_camera->camera.pitch = clamp(c_camera->camera.pitch, -PI_2 + 0.01, PI_2 - 0.01);
+    c_camera->camera.pitch = std::clamp((float)c_camera->camera.pitch, (float)(-PI_2 + 0.01), (float)(PI_2 - 0.01));
 
     c_camera->camera.yaw -= state.window->mouse.delta.x /
                             (((f32)state.window->frame_delta) /
                              (c_control->mouse_sensitivity * 15000.0f));
 }
 
-static void tick(struct ControlComponent *c_control, struct Entity entity) {
-    struct MovementComponent* c_movement = (MovementComponent*)ecs_get(entity, C_MOVEMENT);
-    struct BlockLookComponent* c_blocklook = (BlockLookComponent*)ecs_get(entity, C_BLOCKLOOK);
-    struct PhysicsComponent* c_physics = (PhysicsComponent*)ecs_get(entity, C_PHYSICS);
+static void tick(struct ControlComponent *c_control, Entity* entity) {
+    struct MovementComponent* c_movement = entity->componentManager->getMovementComponent(entity);
+    struct BlockLookComponent* c_blocklook = entity->componentManager->getBlockLookComponent(entity);
+    struct PhysicsComponent* c_physics = entity->componentManager->getPhysicsComponent(entity);
 
     // Can't sprint in flying mode because key binding in flying shift = fly down
     if (!c_movement->flags.flying) {
@@ -41,7 +42,7 @@ static void tick(struct ControlComponent *c_control, struct Entity entity) {
 
     if (state.window->mouse.buttons[GLFW_MOUSE_BUTTON_LEFT].pressed_tick
         && c_blocklook->hit) {
-        world_set_block(entity.ecs->world, c_blocklook->pos, AIR);
+        world_set_block(entity->ecs->world, c_blocklook->pos, AIR);
     }
 
     struct Block held_block = BLOCKS[state.ui.hotbar.values[state.ui.hotbar.index]];
@@ -52,30 +53,31 @@ static void tick(struct ControlComponent *c_control, struct Entity entity) {
         // only allow the block to be placed if it wouldn't collide with this player's AABB
         ivec3s pos_place = glms_ivec3_add(c_blocklook->pos, DIR2IVEC3S(c_blocklook->face));
         AABB aabb_place;
-        held_block.get_aabb(entity.ecs->world, pos_place, aabb_place);
+        held_block.get_aabb(entity->ecs->world, pos_place, aabb_place);
 
         if (!physics_collides(c_physics, aabb_place)) {
-            world_set_block(entity.ecs->world, pos_place, held_block.id);
+            world_set_block(entity->ecs->world, pos_place, held_block.id);
         }
     }
 
-    struct LightComponent* c_light = (LightComponent*) ecs_get(entity, C_LIGHT);
+    struct LightComponent* c_light = entity->componentManager->getLightComponent(entity);
     if (held_block.can_emit_light) {
-        struct PositionComponent* c_position = (PositionComponent*) ecs_get(entity, C_POSITION);
+        struct PositionComponent* c_position = entity->componentManager->getPositionComponent(entity);
 
         c_light->flags.enabled = true;
-        c_light->light = held_block.get_torchlight(entity.ecs->world, c_position->block);
+        c_light->light = held_block.get_torchlight(entity->ecs->world, c_position->block);
     } else {
         c_light->flags.enabled = false;
     }
 }
 
 void c_control_init(struct ECS *ecs) {
-    ecs_register(C_CONTROL, struct ControlComponent, ecs, ((union ECSSystem){
-        .init = NULL,
-        .destroy = NULL,
-        .render = NULL,
-        .update = (ECSSubscriber) update,
-        .tick = (ECSSubscriber) tick
-    }));
+    ECSSystem system;
+    system.init = NULL;
+    system.destroy = NULL;
+    system.render = NULL;
+    system.update = (ECSSubscriber) update;
+    system.tick = (ECSSubscriber) tick;
+
+    ecs_register(C_CONTROL, ControlComponent, ecs, system);
 }

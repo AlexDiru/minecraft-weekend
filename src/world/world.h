@@ -48,14 +48,18 @@ struct Heightmap {
 // sets heightmap data for heightmap h at the specified (x, z) position
 #define HEIGHTMAP_SET(h, p, y) ((h)->data[HEIGHTMAP_INDEX(p)] = y)
 
+ECSComponentManager;
+
 struct World {
     // entity component system
     struct ECS ecs;
+    ECSComponentManager *componentManager;
 
     // the entity around which the world is viewed and the entity around which
     // the world is loaded
     // both must have a position component; entity_view must have a camera component
-    struct Entity entity_view, entity_load;
+    Entity* entity_view;
+    Entity* entity_load;
 
     // sky state
     struct Sky sky;

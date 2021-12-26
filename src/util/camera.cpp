@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "../gfx/window.h"
+#include <algorithm>
 
 void perspective_camera_init(PerspectiveCamera *self, f32 fov) {
     memset(self, 0, sizeof(PerspectiveCamera));
@@ -12,7 +13,7 @@ void perspective_camera_init(PerspectiveCamera *self, f32 fov) {
 
 void perspective_camera_update(PerspectiveCamera *self) {
     // bound pitch at +- pi/2 and yaw in [0, tau]
-    self->pitch = clamp(self->pitch, -PI_2, PI_2);
+    self->pitch = std::clamp(float(self->pitch), float(-PI_2), float(PI_2));
     self->yaw = (self->yaw < 0 ? TAU : 0.0f) + fmodf(self->yaw, TAU);
 
     self->direction = (vec3s) {{

@@ -108,17 +108,18 @@ static inline ivec2s world_heightmap_offset(World *self, size_t i) {
 }
 
 // returns the heightmap for the specified chunk
-Heightmap *chunk_get_heightmap(Chunk *self) {
-    return self->world->heightmaps[
-        world_heightmap_index(
-            self->world,
-            (ivec2s) {{ self->offset.x, self->offset.z }})];
+Heightmap* chunk_get_heightmap(Chunk *self) {
+    World* world = self->world;
+    Heightmap** heightmaps = world->heightmaps;
+    int index = world_heightmap_index(world, { self->offset.x, self->offset.z });
+
+    return heightmaps[index];
 }
 
 // returns heightmap value at specified x, z coordinate
 s64 world_heightmap_get(World *self, ivec2s p) {
-    ivec3s offset_c = world_pos_to_offset((ivec3s) {{ p.x, 0, p.y }});
-    ivec2s offset_h = (ivec2s) {{ offset_c.x, offset_c.z }};
+    ivec3s offset_c = world_pos_to_offset({ p.x, 0, p.y });
+    ivec2s offset_h = { offset_c.x, offset_c.z };
 
     if (world_heightmap_in_bounds(self, offset_h)) {
         return HEIGHTMAP_GET(
@@ -226,7 +227,6 @@ void world_load_chunk(World *self, ivec3s offset) {
 }
 
 void world_init(World *self) {
-    memset(self, 0, sizeof(World));
     ecs_init(&self->ecs, self);
     sky_init(&self->sky, self);
 
@@ -245,7 +245,7 @@ void world_init(World *self) {
     self->chunks = (Chunk**)calloc(1, NUM_CHUNKS(self) * sizeof(struct Chunk *));
     self->heightmaps = (Heightmap**)calloc(1, NUM_HEIGHTMAPS(self) * sizeof(struct Heightmap *));
 
-    world_set_center(self, GLMS_IVEC3_ZERO);
+    world_set_center(self, { 0, 0, 0 });
 }
 
 void world_destroy(World *self) {
@@ -375,7 +375,7 @@ void world_set_center(World *self, ivec3s center_pos) {
 
 void world_render(World *self) {
     // copy camera settings from view entity
-    struct CameraComponent *c_camera = (CameraComponent*)ecs_get(self->entity_view, C_CAMERA);
+    CameraComponent *c_camera = self->componentManager->getCameraComponent(self->entity_view);
     memcpy(&state.renderer.perspective_camera, &c_camera->camera, sizeof(struct PerspectiveCamera));
 
     // configure sky
@@ -443,7 +443,7 @@ void world_update(World *self) {
 void world_tick(World *self) {
     self->ticks++;
 
-    world_set_center(self, ((PositionComponent *) ecs_get(self->entity_view, C_POSITION))->block);
+    world_set_center(self, (self->componentManager->getPositionComponent(self->entity_view))->block);
 
     world_foreach(self, chunk) {
         if (chunk != NULL) {

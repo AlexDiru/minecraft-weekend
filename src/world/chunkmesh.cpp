@@ -119,7 +119,7 @@ static int depth_cmp(const Face *a, const Face *b) {
 }
 
 static void chunkmesh_sort(ChunkMesh *self, enum SortKind kind) {
-    vec3s center = ((PositionComponent *) ecs_get(self->chunk->world->entity_view, C_POSITION))->position;
+    vec3s center = self->chunk->world->componentManager->getPositionComponent(self->chunk->world->entity_view)->position;
 
     struct ChunkMeshBuffer
         *faces = &self->buffers[FACES],

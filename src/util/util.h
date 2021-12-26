@@ -13,13 +13,8 @@
 #include <assert.h>
 #include <limits.h>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-braces"
-
 #include <cglm/cglm.h>
 #include <cglm/struct.h>
-
-#pragma GCC diagnostic pop
 
 #include "ivec2.h"
 #include "ivec2s.h"

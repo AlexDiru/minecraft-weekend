@@ -11,8 +11,8 @@ static bool block_raycast(void* worldPtr, ivec3s pos) {
     return block.id != AIR && !block.liquid;
 }
 
-static void tick(BlockLookComponent *c_blocklook, Entity entity) {
-    CameraComponent *c_camera = (CameraComponent*)ecs_get(entity, C_CAMERA);
+static void tick(BlockLookComponent *c_blocklook, Entity* entity) {
+    CameraComponent *c_camera = entity->componentManager->getCameraComponent(entity);
 
     ivec3s pos;
     int dir;
@@ -21,7 +21,7 @@ static void tick(BlockLookComponent *c_blocklook, Entity entity) {
     ray.origin = c_camera->camera.position;
     ray.direction = c_camera->camera.direction;
 
-    if (ray_block(ray, c_blocklook->radius, entity.ecs->world, block_raycast, &pos, &dir)) {
+    if (ray_block(ray, c_blocklook->radius, entity->ecs->world, block_raycast, &pos, &dir)) {
         c_blocklook->hit = true;
         c_blocklook->pos = pos;
         c_blocklook->face = static_cast<Direction>(dir);
@@ -30,11 +30,11 @@ static void tick(BlockLookComponent *c_blocklook, Entity entity) {
     }
 }
 
-static void render(BlockLookComponent *c_blocklook, Entity entity) {
+static void render(BlockLookComponent *c_blocklook, Entity* entity) {
     if (c_blocklook->flags.render && c_blocklook->hit) {
         AABB aabb;
-        BLOCKS[world_get_block(entity.ecs->world, c_blocklook->pos)]
-            .get_aabb(entity.ecs->world, c_blocklook->pos, aabb);
+        BLOCKS[world_get_block(entity->ecs->world, c_blocklook->pos)]
+            .get_aabb(entity->ecs->world, c_blocklook->pos, aabb);
         glms_aabb_scale(aabb, (vec3s) {{ 1.005f, 1.005f, 1.005f }}, aabb);
         renderer_aabb(
             &state.renderer, aabb,

@@ -2,14 +2,14 @@
 #include "ecs.h"
 #include "../world/world.h"
 
-static void tick(MovementComponent *c_movement,Entity entity) {
-    struct CameraComponent *c_camera = (CameraComponent*)ecs_get(entity, C_CAMERA);
-    struct PositionComponent *c_position = (PositionComponent*)ecs_get(entity, C_POSITION);
-    struct PhysicsComponent *c_physics = (PhysicsComponent*)ecs_get(entity, C_PHYSICS);
+static void tick(MovementComponent *c_movement,Entity* entity) {
+    struct CameraComponent *c_camera = entity->componentManager->getCameraComponent(entity);
+    struct PositionComponent *c_position = entity->componentManager->getPositionComponent(entity);
+    struct PhysicsComponent *c_physics = entity->componentManager->getPhysicsComponent(entity);
 
-    struct Block block = BLOCKS[world_get_block(entity.ecs->world, c_position->block)],
+    struct Block block = BLOCKS[world_get_block(entity->ecs->world, c_position->block)],
                  top_block = BLOCKS[world_get_block(
-                     entity.ecs->world,
+                     entity->ecs->world,
                      world_pos_to_block(glms_vec3_add(c_position->position,
                                                       (vec3s) {{ 0.0f, c_physics->size[1].y, 0.0f }})))];
 
@@ -107,11 +107,12 @@ static void tick(MovementComponent *c_movement,Entity entity) {
 }
 
 void c_movement_init(ECS *ecs) {
-    ecs_register(C_MOVEMENT, struct MovementComponent, ecs, ((union ECSSystem) {
-        .init = NULL,
-        .destroy = NULL,
-        .render = NULL,
-        .update = NULL,
-        .tick = (ECSSubscriber) tick
-    }));
+    ECSSystem system;
+    system.init = NULL;
+    system.destroy = NULL;
+    system.render = NULL;
+    system.update = NULL;
+    system.tick = (ECSSubscriber) tick;
+
+    ecs_register(C_MOVEMENT, struct MovementComponent, ecs, system);
 }

@@ -72,9 +72,9 @@ static void make_aabb(
         dest);
 }
 
-static void tick(PhysicsComponent *c_physics, Entity entity) {
-    struct PositionComponent *c_position = (PositionComponent*)ecs_get(entity, C_POSITION);
-    struct Block block = BLOCKS[world_get_block(entity.ecs->world, c_position->block)];
+static void tick(PhysicsComponent *c_physics, Entity* entity) {
+    struct PositionComponent *c_position = entity->componentManager->getPositionComponent(entity);
+    struct Block block = BLOCKS[world_get_block(entity->ecs->world, c_position->block)];
 
     if (c_physics->flags.gravity) {
         c_physics->velocity = glms_vec3_add(
@@ -112,8 +112,8 @@ static void tick(PhysicsComponent *c_physics, Entity entity) {
 // attempt to move a physics component belonging to the specified entity
 vec3s physics_move(
     PhysicsComponent *c_physics,
-    Entity entity, vec3s movement) {
-    PositionComponent *c_position = (PositionComponent*)ecs_get(entity, C_POSITION);
+    Entity* entity, vec3s movement) {
+    PositionComponent *c_position = entity->componentManager->getPositionComponent(entity);
 
     if (!c_physics->flags.collide) {
         c_position->position = glms_vec3_add(c_position->position, movement);
@@ -129,7 +129,7 @@ vec3s physics_move(
     glms_aabb_scale(area, (vec3s) {{ 2, 2, 2 }}, area);
 
     AABB aabbs[256];
-    size_t n = world_get_aabbs(entity.ecs->world, area, aabbs, 256);
+    size_t n = world_get_aabbs(entity->ecs->world, area, aabbs, 256);
 
     vec3s moved = move(c_physics->aabb, movement, aabbs, n);
     c_position->position = glms_vec3_add(
@@ -149,11 +149,12 @@ bool physics_collides(PhysicsComponent *c_physics, AABB aabb) {
 }
 
 void c_physics_init(ECS *ecs) {
-    ecs_register(C_PHYSICS, struct PhysicsComponent, ecs, ((union ECSSystem) {
-        .init = NULL,
-        .destroy = NULL,
-        .render = NULL,
-        .update = NULL,
-        .tick = (ECSSubscriber) tick
-    }));
+    ECSSystem system;
+    system.init = NULL;
+    system.destroy = NULL;
+    system.render = NULL;
+    system.update = NULL;
+    system.tick = (ECSSubscriber) tick;
+
+    ecs_register(C_PHYSICS, struct PhysicsComponent, ecs, system);
 }

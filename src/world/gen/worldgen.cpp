@@ -322,9 +322,9 @@ void worldgen_generate(Chunk *chunk) {
                 
                 // decrease temperature with height
                 t -= 0.4f * n;
-                t = clamp(t, 0.0f, 1.0f);
+                t = std::clamp((float)t, 0.0f, 1.0f);
 
-                enum Biome biome_id = get_biome(h, m, t, n, n + h);
+                Biome biome_id = get_biome(h, m, t, n, n + h);
                 BiomeData biome = BIOME_DATA[biome_id];
 
                 h = sign(h) * fabsf(powf(fabsf(h), biome.exp));
@@ -338,12 +338,12 @@ void worldgen_generate(Chunk *chunk) {
 
 #define WG_GET_H(_x, _z)\
     heightmap->worldgen_data[\
-        clamp((_x), 0, CHUNK_SIZE.x - 1) * CHUNK_SIZE.x +\
-        clamp((_z), 0, CHUNK_SIZE.z - 1)]
+        std::clamp(int(_x), 0, int(CHUNK_SIZE.x - 1)) * CHUNK_SIZE.x +\
+        std::clamp(int(_z), 0, int(CHUNK_SIZE.z - 1))]
 
         // smooth heightmap
-        for (s64 x = 0; x < CHUNK_SIZE.x; x++) {
-            for (s64 z = 0; z < CHUNK_SIZE.z; z++) {
+        for (int x = 0; x < CHUNK_SIZE.x; x++) {
+            for (int z = 0; z < CHUNK_SIZE.z; z++) {
                 f32 v = 0.0f;
                 v += (WG_GET_H(x - 1, z - 1)).h_b;
                 v += (WG_GET_H(x + 1, z - 1)).h_b;

@@ -130,7 +130,7 @@ void chunk_update(Chunk *self) {
     // Depth sort the transparent mesh if
     // (1) the player is inside of this chunk and their block position changed
     // (2) the player has moved chunks AND this chunk is close
-    PositionComponent *c_position = (PositionComponent*)ecs_get(self->world->entity_view, C_POSITION);
+    PositionComponent *c_position = self->world->componentManager->getPositionComponent(self->world->entity_view);
     bool within_distance = glms_ivec3_norm(glms_ivec3_sub(self->offset, c_position->offset)) < 4;
 
     self->mesh->flags.depth_sort =

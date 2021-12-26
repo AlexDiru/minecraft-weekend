@@ -22,11 +22,13 @@ static void tick(PositionComponent *c_position, Entity entity) {
 }
 
 void c_position_init(ECS *ecs) {
-    ecs_register(C_POSITION, struct PositionComponent, ecs, ((union ECSSystem) {
-        .init = NULL,
-        .destroy = NULL,
-        .render = NULL,
-        .update = NULL,
-        .tick = (ECSSubscriber) tick
-    }));
+
+    ECSSystem system;
+    system.init = NULL;
+    system.destroy = NULL;
+    system.render = NULL;
+    system.update = NULL;
+    system.tick = (ECSSubscriber) tick;
+
+    ecs_register(C_POSITION, struct PositionComponent, ecs, system);
 }

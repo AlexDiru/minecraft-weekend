@@ -3,27 +3,27 @@
 #include "../world/world.h"
 #include "../world/light.h"
 
-static void tick(LightComponent *c_light, Entity entity) {
-    struct PositionComponent *c_position = (PositionComponent*)ecs_get(entity, C_POSITION);
+static void tick(LightComponent *c_light, Entity* entity) {
+    struct PositionComponent *c_position = entity->componentManager->getPositionComponent(entity);
 
     bool changed = ivec3scmp(c_position->block, c_light->last.pos) ||
         c_light->flags.enabled != c_light->last.enabled;
 
     if (changed) {
-        torchlight_remove(entity.ecs->world, c_light->last.pos);
+        torchlight_remove(entity->ecs->world, c_light->last.pos);
 
         // reset block light if it was removed
-        Block block = BLOCKS[world_get_block(entity.ecs->world, c_light->last.pos)];
+        Block block = BLOCKS[world_get_block(entity->ecs->world, c_light->last.pos)];
         if (block.can_emit_light) {
             torchlight_add(
-                entity.ecs->world,
+                entity->ecs->world,
                 c_light->last.pos,
-                block.get_torchlight(entity.ecs->world, c_light->last.pos));
+                block.get_torchlight(entity->ecs->world, c_light->last.pos));
         }
     }
 
     if (c_light->flags.enabled && changed) {
-        torchlight_add(entity.ecs->world, c_position->block, c_light->light);
+        torchlight_add(entity->ecs->world, c_position->block, c_light->light);
 
         c_light->last.pos = c_position->block;
         c_light->last.light = c_light->light;
@@ -33,11 +33,12 @@ static void tick(LightComponent *c_light, Entity entity) {
 }
 
 void c_light_init(ECS *ecs) {
-    ecs_register(C_LIGHT, LightComponent, ecs, ((union ECSSystem) {
-        .init = NULL,
-        .destroy = NULL,
-        .render = NULL,
-        .update = NULL,
-        .tick = (ECSSubscriber) tick
-    }));
+    ECSSystem system;
+    system.init = NULL;
+    system.destroy = NULL;
+    system.render = NULL;
+    system.update = NULL;
+    system.tick = (ECSSubscriber) tick;
+
+    ecs_register(C_LIGHT, LightComponent, ecs, system);
 }

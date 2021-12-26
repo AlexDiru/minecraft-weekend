@@ -1,13 +1,8 @@
 #ifndef FMATH_H
 #define FMATH_H
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-braces"
-
 #include <cglm/cglm.h>
 #include <cglm/struct.h>
-
-#pragma GCC diagnostic pop
 
 #include "types.h"
 #include "direction.h"
@@ -74,11 +69,6 @@ static ivec3s VEC3S2I(vec3s _v) {
     __typeof__ (b) _b = (b); \
     _a < _b ? _a : _b; })
 
-#define clamp(x, mn, mx) ({\
-    __typeof__ (x) _x = (x); \
-    __typeof__ (mn) _mn = (mn); \
-    __typeof__ (mx) _mx = (mx); \
-    max(_mn, min(_mx, _x)); })
 
 #define SRAND(seed) srand(seed)
 #define RAND(min, max) ((rand() % (max - min + 1)) + min)

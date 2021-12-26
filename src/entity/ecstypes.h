@@ -7,10 +7,14 @@
 
 typedef u64 EntityId;
 
+struct ECS;
+class ECSComponentManager;
+
 struct Entity {
     EntityId id;
     u64 index;
-    struct ECS *ecs;
+    ECS *ecs;
+    ECSComponentManager* componentManager;
 };
 
 #endif

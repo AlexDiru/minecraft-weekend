@@ -2,8 +2,10 @@
 #define C_BLOCKLOOK_H
 
 #include "../util/util.h"
+#include "ecs.h"
 
-struct BlockLookComponent {
+class BlockLookComponent {
+  public:
     bool hit;
     ivec3s pos;
     enum Direction face;
