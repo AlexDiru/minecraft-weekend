@@ -31,11 +31,11 @@ typedef u32 Light;
 
 #define LIGHT_OF(_sun, _torch) ((((u32) (_sun)) << 16) | ((u32) (_torch)))
 
-void torchlight_add(struct World *world, ivec3s pos, Torchlight light);
-void torchlight_remove(struct World *world, ivec3s pos);
+void torchlight_add(World *world, ivec3s pos, Torchlight light);
+void torchlight_remove(World *world, ivec3s pos);
 
-void light_remove(struct World *world, ivec3s pos);
-void light_apply(struct Chunk *chunk);
-void light_update(struct World *world, ivec3s pos);
+void light_remove(World *world, ivec3s pos);
+void light_apply(Chunk *chunk);
+void light_update(World *world, ivec3s pos);
 
 #endif

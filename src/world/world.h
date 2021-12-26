@@ -93,24 +93,24 @@ struct World {
     } throttles;
 };
 
-struct Heightmap *chunk_get_heightmap(struct Chunk *self);
-s64 world_heightmap_get(struct World *self, ivec2s p);
-bool world_heightmap_update(struct World *self, ivec3s p);
+Heightmap *chunk_get_heightmap(Chunk *self);
+s64 world_heightmap_get(World *self, ivec2s p);
+bool world_heightmap_update(World *self, ivec3s p);
 
-void chunk_heightmap_recalculate(struct Chunk *chunk);
-void world_heightmap_recalculate(struct World *self, ivec2s p);
+void chunk_heightmap_recalculate(Chunk *chunk);
+void world_heightmap_recalculate(World *self, ivec2s p);
 
-void world_remove_unloaded_block(struct World *self, size_t i);
-void world_append_unloaded_block(struct World *self, ivec3s pos, enum BlockId block);
+void world_remove_unloaded_block(World *self, size_t i);
+void world_append_unloaded_block(World *self, ivec3s pos, enum BlockId block);
 
-void world_init(struct World *self);
-void world_destroy(struct World *self);
-void world_set_center(struct World *self, ivec3s center_pos);
-void world_render(struct World *self);
-void world_update(struct World *self);
-void world_tick(struct World *self);
+void world_init(World *self);
+void world_destroy(World *self);
+void world_set_center(World *self, ivec3s center_pos);
+void world_render(World *self);
+void world_update(World *self);
+void world_tick(World *self);
 
-size_t world_get_aabbs(struct World *self, AABB area, AABB *aabbs, size_t n);
+size_t world_get_aabbs(World *self, AABB area, AABB *aabbs, size_t n);
 
 // block position -> chunk offset
 static inline ivec3s world_pos_to_offset(ivec3s pos) {
@@ -132,30 +132,34 @@ static inline ivec3s world_pos_to_chunk_pos(ivec3s pos) {
     return glms_ivec3_mod(glms_ivec3_add(glms_ivec3_mod(pos, CHUNK_SIZE), CHUNK_SIZE), CHUNK_SIZE);
 }
 
-static inline bool world_chunk_in_bounds(struct World *self, ivec3s offset) {
+static inline bool world_chunk_in_bounds(World *self, ivec3s offset) {
     ivec3s p = glms_ivec3_sub(offset, self->chunks_origin);
     return p.x >= 0 && p.y >= 0 && p.z >= 0 &&
            p.x < (s32)self->chunks_size && p.y < (s32)self->chunks_size && p.z < (s32)self->chunks_size;
 }
 
 // chunk offset -> world array index
-static inline size_t world_chunk_index(struct World *self, ivec3s offset) {
+static inline size_t world_chunk_index(World *self, ivec3s offset) {
     ivec3s p = glms_ivec3_sub(offset, self->chunks_origin);
     return (p.x * self->chunks_size * self->chunks_size) + (p.z * self->chunks_size) + p.y;
 }
 
 // world array index -> chunk offset
-static inline ivec3s world_chunk_offset(struct World *self, size_t i) {
+static inline ivec3s world_chunk_offset(World *self, size_t i) {
+    const int x = i / (self->chunks_size * self->chunks_size);
+    const int y = i % self->chunks_size;
+    const int z = (i / self->chunks_size) % self->chunks_size;
+
     return glms_ivec3_add(
         self->chunks_origin,
-        (ivec3s){{i / (self->chunks_size * self->chunks_size),
-                  i % self->chunks_size,
-                  (i / self->chunks_size) % self->chunks_size}});
+        (ivec3s){{x,
+                  y,
+                  z}});
 }
 
 // returns the chunk at the specified offset, NULL if it is not loaded or is
 // out of bounds
-static inline struct Chunk *world_get_chunk(struct World *self, ivec3s offset) {
+static inline Chunk *world_get_chunk(World *self, ivec3s offset) {
     if (!world_chunk_in_bounds(self, offset)) {
         return NULL;
     } else {
@@ -164,17 +168,17 @@ static inline struct Chunk *world_get_chunk(struct World *self, ivec3s offset) {
 }
 
 // returns true if the specified chunk offset is loaded
-static inline bool world_contains_chunk(struct World *self, ivec3s offset) {
+static inline bool world_contains_chunk(World *self, ivec3s offset) {
     return world_get_chunk(self, offset) != NULL;
 }
 
 // returns true if the specified position is in bounds (loaded or unloaded)
-static inline bool world_in_bounds(struct World *self, ivec3s pos) {
+static inline bool world_in_bounds(World *self, ivec3s pos) {
     return world_chunk_in_bounds(self, world_pos_to_offset(pos));
 }
 
 // returns true if the world contains the specified position (it is loaded)
-static inline bool world_contains(struct World *self, ivec3s pos) {
+static inline bool world_contains(World *self, ivec3s pos) {
     return world_contains_chunk(self, world_pos_to_offset(pos));
 }
 

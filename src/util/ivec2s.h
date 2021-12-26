@@ -58,21 +58,18 @@
 
 #include "ivec2.h"
 
-typedef union ivec2s {
+struct ivec2s {
   ivec2 raw;
-#if CGLM_USE_ANONYMOUS_STRUCT
-  struct {
     int x;
     int y;
-  };
-#endif
-} ivec2s;
+};
 
 #define GLMS_IVEC2_ONE_INIT   {GLM_IVEC2_ONE_INIT}
 #define GLMS_IVEC2_ZERO_INIT  {GLM_IVEC2_ZERO_INIT}
 
 #define GLMS_IVEC2_ONE  ((ivec2s)GLMS_IVEC2_ONE_INIT)
-#define GLMS_IVEC2_ZERO ((ivec2s)GLMS_IVEC2_ZERO_INIT)
+#define GLMS_IVEC2S_ZERO() ((ivec2s)GLM_IVEC2_ZERO_INIT)
+
 
 // /*!
 //  * @brief init ivec2 using ivec2

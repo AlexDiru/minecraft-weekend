@@ -10,7 +10,7 @@ struct Button {
 
 
 struct Mouse {
-    struct Button buttons[GLFW_MOUSE_BUTTON_LAST];
+    Button buttons[GLFW_MOUSE_BUTTON_LAST];
     vec2s position, delta;
 };
 
@@ -24,8 +24,8 @@ struct Window {
     GLFWwindow *handle;
     ivec2s size;
     FWindow init, destroy, tick, update, render;
-    struct Mouse mouse;
-    struct Keyboard keyboard;
+    Mouse mouse;
+    Keyboard keyboard;
 
     // timing variables
     u64 last_second;

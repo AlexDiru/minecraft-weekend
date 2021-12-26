@@ -66,28 +66,28 @@ struct Renderer {
     } flags;
 };
 
-void renderer_init(struct Renderer *self);
-void renderer_destroy(struct Renderer *self);
-void renderer_update(struct Renderer *self);
-void renderer_prepare(struct Renderer *self, enum RenderPass pass);
-void renderer_set_camera(struct Renderer *self, enum CameraType type);
-void renderer_push_camera(struct Renderer *self);
-void renderer_pop_camera(struct Renderer *self);
-void renderer_set_view_proj(struct Renderer *self);
-void renderer_use_shader(struct Renderer *self, enum ShaderType shader);
+void renderer_init(Renderer *self);
+void renderer_destroy(Renderer *self);
+void renderer_update(Renderer *self);
+void renderer_prepare(Renderer *self, enum RenderPass pass);
+void renderer_set_camera(Renderer *self, enum CameraType type);
+void renderer_push_camera(Renderer *self);
+void renderer_pop_camera(Renderer *self);
+void renderer_set_view_proj(Renderer *self);
+void renderer_use_shader(Renderer *self, enum ShaderType shader);
 
 void renderer_quad_color(
-    struct Renderer *self, vec2s size,
+    Renderer *self, vec2s size,
     vec4s color, mat4s model);
 
 void renderer_quad_texture(
-    struct Renderer *self, struct Texture texture,
+    Renderer *self, Texture texture,
     vec2s size, vec4s color,
     vec2s uv_min, vec2s uv_max,
     mat4s model);
 
 void renderer_aabb(
-    struct Renderer *self, AABB aabb, vec4s color,
+    Renderer *self, AABB aabb, vec4s color,
     mat4s model, enum FillMode fill_mode);
 
 #endif

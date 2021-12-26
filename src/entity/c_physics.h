@@ -33,9 +33,9 @@ struct PhysicsComponent {
 };
 
 vec3s physics_move(
-    struct PhysicsComponent *c_physics,
-    struct Entity entity, vec3s movement);
+    PhysicsComponent *c_physics,
+    Entity entity, vec3s movement);
 
-bool physics_collides(struct PhysicsComponent *c_physics, AABB aabb);
+bool physics_collides(PhysicsComponent *c_physics, AABB aabb);
 
 #endif

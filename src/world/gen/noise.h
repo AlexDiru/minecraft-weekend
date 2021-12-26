@@ -19,7 +19,7 @@ struct Octave {
 
 // Combined noise where compute(x, z) = n.compute(x + m.compute(x, z), z)
 struct Combined {
-    struct Noise *n, *m;
+    Noise *n, *m;
 };
 
 struct Basic {
@@ -27,13 +27,13 @@ struct Basic {
 };
 
 struct ExpScale {
-    struct Noise *n;
+    Noise *n;
     f32 exp, scale;
 };
 
-struct Noise octave(s32 n, s32 o);
-struct Noise combined(struct Noise *n, struct Noise *m);
-struct Noise basic(s32 o);
-struct Noise expscale(struct Noise *n, f32 exp, f32 scale);
+Noise octave(s32 n, s32 o);
+Noise combined(Noise *n, Noise *m);
+Noise basic(s32 o);
+Noise expscale(Noise *n, float exp, float scale);
 
 #endif

@@ -195,7 +195,7 @@ float noise2( float x, float y )
     iy1 = (iy0 + 1) & 0xff;
     ix0 = ix0 & 0xff;
     iy0 = iy0 & 0xff;
-    
+
     t = FADE( fy0 );
     s = FADE( fx0 );
 
@@ -229,7 +229,7 @@ float pnoise2( float x, float y, int px, int py )
     iy1 = (( iy0 + 1 ) % py) & 0xff;  // Wrap to 0..py-1 and wrap to 0..255
     ix0 = ( ix0 % px ) & 0xff;
     iy0 = ( iy0 % py ) & 0xff;
-    
+
     t = FADE( fy0 );
     s = FADE( fx0 );
 
@@ -270,7 +270,7 @@ float noise3( float x, float y, float z )
     ix0 = ix0 & 0xff;
     iy0 = iy0 & 0xff;
     iz0 = iz0 & 0xff;
-    
+
     r = FADE( fz0 );
     t = FADE( fy0 );
     s = FADE( fx0 );
@@ -294,7 +294,7 @@ float noise3( float x, float y, float z )
     nx1 = LERP( r, nxy0, nxy1 );
 
     n1 = LERP( t, nx0, nx1 );
-    
+
     return 0.936f * ( LERP( s, n0, n1 ) );
 }
 
@@ -323,7 +323,7 @@ float pnoise3( float x, float y, float z, int px, int py, int pz )
     ix0 = ( ix0 % px ) & 0xff;
     iy0 = ( iy0 % py ) & 0xff;
     iz0 = ( iz0 % pz ) & 0xff;
-    
+
     r = FADE( fz0 );
     t = FADE( fy0 );
     s = FADE( fx0 );
@@ -347,7 +347,7 @@ float pnoise3( float x, float y, float z, int px, int py, int pz )
     nx1 = LERP( r, nxy0, nxy1 );
 
     n1 = LERP( t, nx0, nx1 );
-    
+
     return 0.936f * ( LERP( s, n0, n1 ) );
 }
 
@@ -392,17 +392,17 @@ float noise4( float x, float y, float z, float w )
     nxyz0 = grad4(perm[ix0 + perm[iy0 + perm[iz0 + perm[iw0]]]], fx0, fy0, fz0, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy0 + perm[iz0 + perm[iw1]]]], fx0, fy0, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix0 + perm[iy0 + perm[iz1 + perm[iw0]]]], fx0, fy0, fz1, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy0 + perm[iz1 + perm[iw1]]]], fx0, fy0, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
-        
+
     nx0 = LERP ( r, nxy0, nxy1 );
 
     nxyz0 = grad4(perm[ix0 + perm[iy1 + perm[iz0 + perm[iw0]]]], fx0, fy1, fz0, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy1 + perm[iz0 + perm[iw1]]]], fx0, fy1, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix0 + perm[iy1 + perm[iz1 + perm[iw0]]]], fx0, fy1, fz1, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx0, fy1, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
@@ -414,7 +414,7 @@ float noise4( float x, float y, float z, float w )
     nxyz0 = grad4(perm[ix1 + perm[iy0 + perm[iz0 + perm[iw0]]]], fx1, fy0, fz0, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy0 + perm[iz0 + perm[iw1]]]], fx1, fy0, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix1 + perm[iy0 + perm[iz1 + perm[iw0]]]], fx1, fy0, fz1, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy0 + perm[iz1 + perm[iw1]]]], fx1, fy0, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
@@ -424,7 +424,7 @@ float noise4( float x, float y, float z, float w )
     nxyz0 = grad4(perm[ix1 + perm[iy1 + perm[iz0 + perm[iw0]]]], fx1, fy1, fz0, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy1 + perm[iz0 + perm[iw1]]]], fx1, fy1, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw0]]]], fx1, fy1, fz1, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx1, fy1, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
@@ -477,17 +477,17 @@ float pnoise4( float x, float y, float z, float w,
     nxyz0 = grad4(perm[ix0 + perm[iy0 + perm[iz0 + perm[iw0]]]], fx0, fy0, fz0, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy0 + perm[iz0 + perm[iw1]]]], fx0, fy0, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix0 + perm[iy0 + perm[iz1 + perm[iw0]]]], fx0, fy0, fz1, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy0 + perm[iz1 + perm[iw1]]]], fx0, fy0, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
-        
+
     nx0 = LERP ( r, nxy0, nxy1 );
 
     nxyz0 = grad4(perm[ix0 + perm[iy1 + perm[iz0 + perm[iw0]]]], fx0, fy1, fz0, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy1 + perm[iz0 + perm[iw1]]]], fx0, fy1, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix0 + perm[iy1 + perm[iz1 + perm[iw0]]]], fx0, fy1, fz1, fw0);
     nxyz1 = grad4(perm[ix0 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx0, fy1, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
@@ -499,7 +499,7 @@ float pnoise4( float x, float y, float z, float w,
     nxyz0 = grad4(perm[ix1 + perm[iy0 + perm[iz0 + perm[iw0]]]], fx1, fy0, fz0, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy0 + perm[iz0 + perm[iw1]]]], fx1, fy0, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix1 + perm[iy0 + perm[iz1 + perm[iw0]]]], fx1, fy0, fz1, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy0 + perm[iz1 + perm[iw1]]]], fx1, fy0, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );
@@ -509,7 +509,7 @@ float pnoise4( float x, float y, float z, float w,
     nxyz0 = grad4(perm[ix1 + perm[iy1 + perm[iz0 + perm[iw0]]]], fx1, fy1, fz0, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy1 + perm[iz0 + perm[iw1]]]], fx1, fy1, fz0, fw1);
     nxy0 = LERP( q, nxyz0, nxyz1 );
-        
+
     nxyz0 = grad4(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw0]]]], fx1, fy1, fz1, fw0);
     nxyz1 = grad4(perm[ix1 + perm[iy1 + perm[iz1 + perm[iw1]]]], fx1, fy1, fz1, fw1);
     nxy1 = LERP( q, nxyz0, nxyz1 );

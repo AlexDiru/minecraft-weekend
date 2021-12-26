@@ -15,14 +15,14 @@
     _name##_init(ecs);
 
 static inline void _ecs_init_internal(struct ECS *ecs) {
-    _ECS_DECL_COMPONENT(c_position);
-    _ECS_DECL_COMPONENT(c_camera);
-    _ECS_DECL_COMPONENT(c_control);
-    _ECS_DECL_COMPONENT(c_physics);
-    _ECS_DECL_COMPONENT(c_movement);
-    _ECS_DECL_COMPONENT(c_blocklook);
-    _ECS_DECL_COMPONENT(c_debug);
-    _ECS_DECL_COMPONENT(c_light);
+    //_ECS_DECL_COMPONENT(c_position);
+    //_ECS_DECL_COMPONENT(c_camera);
+    //_ECS_DECL_COMPONENT(c_control);
+    //_ECS_DECL_COMPONENT(c_physics);
+    //_ECS_DECL_COMPONENT(c_movement);
+    //_ECS_DECL_COMPONENT(c_blocklook);
+    //_ECS_DECL_COMPONENT(c_debug);
+    //_ECS_DECL_COMPONENT(c_light);
 }
 
 #define ECSCOMPONENT_LAST C_LIGHT

@@ -19,7 +19,7 @@ enum ECSEvent {
 };
 
 
-typedef void (*ECSSubscriber)(void *, struct Entity);
+typedef void (*ECSSubscriber)(void *, Entity);
 
 union ECSSystem {
     struct {
@@ -40,19 +40,19 @@ enum ECSTagValues {
 };
 
 struct ECS {
-    struct ComponentList lists[ECSCOMPONENT_LAST + 1];
+    ComponentList lists[ECSCOMPONENT_LAST + 1];
     EntityId *ids;
     Bitmap used;
     size_t capacity;
     EntityId next_entity_id;
-    struct World *world;
+    World *world;
 };
 
 void _ecs_register_internal(
     enum ECSComponent id, size_t component_size,
-    struct ECS *ecs, union ECSSystem system);
+    ECS *ecs, ECSSystem system);
 
-void _ecs_add_internal(struct Entity entity, enum ECSComponent component_id, void *value);
+void _ecs_add_internal(Entity entity, enum ECSComponent component_id, void *value);
 
 #define _ecs_add3(e, c, v) ({ __typeof__(v) _v = (v); _ecs_add_internal((e), (c), &_v); })
 #define _ecs_add2(e, c) _ecs_add_internal((e), (c), NULL)
@@ -60,13 +60,13 @@ void _ecs_add_internal(struct Entity entity, enum ECSComponent component_id, voi
 #define _ecs_add_overload(_1,_2,_3,NAME,...) NAME
 #define ecs_add(...) _ecs_add_overload(__VA_ARGS__, _ecs_add3, _ecs_add2)(__VA_ARGS__)
 
-void ecs_event(struct ECS *self, enum ECSEvent event);
-struct Entity ecs_new(struct ECS *self);
-void ecs_delete(struct ECS *self, struct Entity entity);
-void ecs_remove(struct Entity entity, enum ECSComponent component);
-bool ecs_has(struct Entity entity, enum ECSComponent component);
-void *ecs_get(struct Entity entity, enum ECSComponent component);
-void ecs_init(struct ECS *self, struct World *world);
-void ecs_destroy(struct ECS *self);
+void ecs_event(ECS *self, enum ECSEvent event);
+Entity ecs_new(ECS *self);
+void ecs_delete(ECS *self, Entity entity);
+void ecs_remove(Entity entity, enum ECSComponent component);
+bool ecs_has(Entity entity, enum ECSComponent component);
+void *ecs_get(Entity entity, enum ECSComponent component);
+void ecs_init(ECS *self, World *world);
+void ecs_destroy(ECS *self);
 
 #endif

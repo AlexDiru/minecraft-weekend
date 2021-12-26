@@ -22,8 +22,8 @@ struct BlockMeshParams {
     enum Direction direction;
 };
 
-void blockmesh_sprite(struct ChunkMesh *mesh, struct BlockMeshParams params);
-void blockmesh_torch(struct ChunkMesh *mesh, struct BlockMeshParams params);
-void blockmesh_face(struct ChunkMesh *mesh, struct BlockMeshParams params);
+void blockmesh_sprite(ChunkMesh *mesh, BlockMeshParams params);
+void blockmesh_torch(ChunkMesh *mesh, BlockMeshParams params);
+void blockmesh_face(ChunkMesh *mesh, BlockMeshParams params);
 
 #endif

@@ -11,11 +11,40 @@
 
 #include "types.h"
 #include "direction.h"
+#include "ivec2s.h"
 
-#define IVEC2S2V(_v) ({ ivec2s _u = ( _v ); ((vec2s) {{ _u.x, _u.y }}); })
-#define VEC2S2I(_v) ({ vec2s _u = ( _v ); ((ivec2s) {{ _u.x, _u.y }}); })
-#define IVEC3S2V(_v) ({ ivec3s _u = ( _v ); ((vec3s) {{ _u.x, _u.y, _u.z }}); })
-#define VEC3S2I(_v) ({ vec3s _u = ( _v ); ((ivec3s) {{ _u.x, _u.y, _u.z }}); })
+static vec2s IVEC2S2V(ivec2s _v) {
+    ivec2s _u = ( _v );
+    vec2s v;
+    v.x = _u.x;
+    v.y = _u.y;
+    return v;
+}
+
+static ivec2s VEC2S2I(vec2s _v) {
+    ivec2s v;
+    v.x = (int)_v.x;
+    v.y = (int)_v.y;
+    return v;
+}
+
+static vec3s IVEC3S2V(ivec3s _v) {
+    ivec3s _u = ( _v );
+    vec3s v;
+    v.x = (int)_u.x;
+    v.y = (int)_u.y;
+    v.z = (int)_u.z;
+    return v;
+}
+
+
+static ivec3s VEC3S2I(vec3s _v) {
+    ivec3s v;
+    v.x = (int)_v.x;
+    v.y = (int)_v.y;
+    v.z = (int)_v.z;
+    return v;
+}
 
 #define IVEC2S23(_v) ({ ivec2s _u = ( _v ); ((ivec3s) {{ _u.x, _u.y, 0 }}); })
 
@@ -62,6 +91,6 @@ struct Ray {
     vec3s origin, direction;
 };
 
-extern bool ray_block(struct Ray ray, f32 max_distance, void *arg, bool (*f)(void *, ivec3s), ivec3s *out, enum Direction *d_out);
+extern bool ray_block(Ray ray, f32 max_distance, void *arg, bool (*f)(void *, ivec3s), ivec3s *out, int *d_out);
 
 #endif

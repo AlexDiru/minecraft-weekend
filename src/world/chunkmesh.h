@@ -89,10 +89,10 @@ struct ChunkMesh {
     struct VBO vbo, ibo;
 };
 
-struct ChunkMesh *chunkmesh_create(struct Chunk *chunk);
-void chunkmesh_destroy(struct ChunkMesh *self);
-void chunkmesh_prepare_render(struct ChunkMesh *self);
-void chunkmesh_render(struct ChunkMesh *self, enum ChunkMeshPart part);
-void chunkmesh_set_persist(struct ChunkMesh *self, bool persist);
+struct ChunkMesh *chunkmesh_create(Chunk *chunk);
+void chunkmesh_destroy(ChunkMesh *self);
+void chunkmesh_prepare_render(ChunkMesh *self);
+void chunkmesh_render(ChunkMesh *self, enum ChunkMeshPart part);
+void chunkmesh_set_persist(ChunkMesh *self, bool persist);
 
 #endif
