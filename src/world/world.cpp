@@ -443,7 +443,8 @@ void world_update(World *self) {
 void world_tick(World *self) {
     self->ticks++;
 
-    world_set_center(self, (self->componentManager->getPositionComponent(self->entity_view))->block);
+    PositionComponent* positionComponent = self->componentManager->getPositionComponent(self->entity_view);
+    world_set_center(self, positionComponent->block);
 
     world_foreach(self, chunk) {
         if (chunk != NULL) {

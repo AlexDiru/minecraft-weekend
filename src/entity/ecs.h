@@ -103,12 +103,16 @@ class ECSComponentManager {
     }
 
     void* get(Entity* entity, ECSComponent id) {
+        printf("Iterating through vector of size: %d\n", componentVector.size());
+
       for (int i = 0; i < componentVector.size(); i++) {
           const auto component = componentVector[i];
           if (component.is(entity, id)) {
+              printf("Found %d of %p. Address: %p\n", (int)id, entity, component.value);
               return component.value;
           }
       }
+      printf("Failed to get %d of %p. Vector size is %d\n", (int)id, entity, componentVector.size());
       return NULL;
     }
 
@@ -118,7 +122,16 @@ class ECSComponentManager {
     }
 
     PositionComponent* getPositionComponent(Entity* entity) {
+        printf("Get Position Component of %p\n", entity);
+
         void* p = get(entity, C_POSITION);
+
+        printf("Found void pointer %p\n", p);
+
+        if (p == NULL) {
+            printf("Cannot find Position Component");
+        }
+
         return (PositionComponent*)p;
     }
 
